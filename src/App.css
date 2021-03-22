@@ -1,3 +1,5 @@
+@import "~react-vis/dist/style";
+
 .App {
   text-align: center;
 }
@@ -13,11 +15,22 @@
   }
 }
 
+
 .App-header {
+  background-color: #5a6680;
+  /* min-height: 100vh; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  height: 50px;
+}
+.App-body {
   background-color: #282c34;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: calc(10px + 2vmin);
@@ -26,6 +39,51 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.info-board {
+  border-width: 1px;
+  border-color: white;
+}
+
+.display-flex {
+  display: flex;
+}
+.downward {
+  color:rgb(255, 102, 102);
+}
+
+.rising {
+  color: rgb(102, 255, 102);
+}
+.prices {
+  margin-right: 16px;
+}
+
+button {
+  height: 50px;
+  width: 100px;
+  margin: 4px;
+  font-weight: bold;
+}
+
+input {
+  height: 30px;
+  width: 50px;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.buyButton {
+  background-color: rgb(102, 156, 255);
+}
+.sellButton {
+  background-color: rgb(102, 255, 102);
+}
+
+.Image-size {
+  height: 100px;
+  width: 100px;
 }
 
 @keyframes App-logo-spin {
