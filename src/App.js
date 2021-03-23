@@ -8,6 +8,17 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core/styles';
+
+const StyledTableCell = withStyles((theme) => ({
+  head: {
+    color: theme.palette.common.white,
+  },
+  body: {
+    fontSize: 14,
+    color: priceChange ? 'red' : 'green',
+  },
+}))(TableCell);
 
 class Timer extends React.Component {
   constructor(props) {
@@ -25,6 +36,7 @@ class Timer extends React.Component {
       equity: 0,
       buyAmount: 1,
       sellAmount: 1,
+      startingSaldo: this.balance
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -63,11 +75,6 @@ class Timer extends React.Component {
     if (chance > 50) {
       randomMultiplier = -randomMultiplier
     }
-    // if (chance > 90) {
-    //   randomMultiplier = randomMultiplier*10
-    // } else if (chance > 95) {
-    //   randomMultiplier = randomMultiplier*30
-    // }
     const newStockPrice = this.state.stockPrice + randomMultiplier
     if (this.state.stockPrice >= 0 && newStockPrice > 0) {
       this.setState(state => ({
@@ -113,7 +120,7 @@ class Timer extends React.Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(() => this.tick(), 1000);
+    this.interval = setInterval(() => this.tick(), 2000);
   }
 
   componentWillUnmount() {
@@ -121,7 +128,6 @@ class Timer extends React.Component {
   }
 
   handleChange(event, type) {
-    console.log(event, type)
     if (type === 'buy') {
       this.setState({buyAmount: event.target.value});
     } else if (type === 'sell') {
@@ -207,27 +213,16 @@ class Timer extends React.Component {
           <div>
             <button className="sellButton" onClick={() => this.sell('all')}>Myy kaikki</button>
           </div>
-          {/* <TableContainer component={Paper}>
-          <Table size="small" aria-label="a dense table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Hinta</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {this.state.prices.map((price) => (
-                <TableRow key={price.id}>
-                  <TableCell component="th" scope="row">
-                    {price.y.toFixed(2)}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer> */}
         </div>
       </div>
     );
+  }
+}
+function priceChange(currentPrice, prices) {
+  let previousPrice = prices.find(p => p.x === currentPrice.x - 1)
+  if (previousPrice) {
+    currentPrice.difference = currentPrice.y - previousPrice.y
+    return currentPrice.y > previousPrice.y
   }
 }
 class PricesTable extends React.Component {
@@ -238,23 +233,32 @@ class PricesTable extends React.Component {
     };
   }
 
-  priceChange(price, index) {
-    let previousPrice = this.props.prices.find(p => p.x > price.x)
-    if (previousPrice) {
-      price.difference = price.y - previousPrice.y
-      return price.y > previousPrice.y
-    }
-  }
+
 
   render() {
-      return (
-      <div className="prices">
-        {this.props.prices.map((price, i) => (
-          <div className={this.priceChange(price, i) ? 'rising' : 'downward'} key={i}>
-            {price.y.toFixed(2)} {price.difference ? price.difference.toFixed(2) : ''}
-          </div>
-        ))}
-      </div>
+    return (
+        <TableContainer className="prices">
+        <Table size="small" aria-label="a dense table">
+          <TableHead>
+            <TableRow>
+              <StyledTableCell>Hinta</StyledTableCell>
+              <StyledTableCell>Hintamuutos</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.props.prices.map((price, i) => (
+              <TableRow key={i}>
+                <TableCell class={priceChange(price, this.props.prices) ? 'rising' : 'downward'}>
+                  {price.y.toFixed(2)}
+                </TableCell>
+                <TableCell class={priceChange(price, this.props.prices) ? 'rising' : 'downward'}>
+                  {price.difference ? price.difference.toFixed(2) : 0}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     );
   }
 }
@@ -269,26 +273,6 @@ function App() {
         Ostosofta
       </header>
       <div className="App-body">
-      {/* <div>
-        <div>
-          asd
-        </div>
-        <div>
-          asd
-        </div>
-        <div>
-          asd
-        </div>
-        <div>
-          asd
-        </div>
-        <div>
-          asd
-        </div>
-        <div>
-          asd
-        </div>
-      </div> */}
         <Timer/>
       </div>
     </div>
