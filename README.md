@@ -1,5 +1,6 @@
 # Osakekauppapeli
 
+Pieni React.js testaus
 Osta osakkeita halvalla ja myy kalliilla. Tai toisinpäin, jos niin huvittaa :)
 
 ## Loitsuja
